@@ -1,0 +1,103 @@
+{
+  "owner": "JUTZUGC",
+  "code": "JUTZUGC",
+  "project": {
+    "key": "wordcraft",
+    "nameCn": "WordCraft",
+    "repoName": "wordcraft-deploy-guide",
+    "oneLiner": "16.4k stars，MIT OR Apache-2.0，纯 Rust 写的现代文字处理器",
+    "officialRepo": "https://github.com/storytold/wordcraft",
+    "officialDocs": "https://github.com/storytold/wordcraft/blob/main/README.md",
+    "stars": "16.4k",
+    "license": "MIT OR Apache-2.0",
+    "highlights": [
+      "读写 docx：保留样式、表格、修订、批注与引用",
+      "熟悉的界面：功能区、样式库、导航窗格与标尺",
+      "排版能力：目录、脚注、题注、索引、分栏与环绕",
+      "跨平台：Windows、macOS、Linux、BSD 原生运行，也有 WebAssembly 版",
+      "可被 Agent 驱动：wordcraft-cli 支持转换、批处理与 MCP",
+      "纯 Rust：从文档模型到渲染与 PDF 导出都自己实现"
+    ],
+    "mcpSupport": "WordCraft 自带 wordcraft-cli mcp，可把文档操作暴露给 Agent（list_commands、execute、inspect_document 等）；本仓库的 MCP 只提供安装步骤与常见问题。",
+    "webuiUrl": "",
+    "adapterPorts": "",
+    "collectedAt": "2026-10-28",
+    "verification": [
+      [
+        "Release v0.11.0 的 Windows / macOS / Linux 安装包与 SHA256 digest 已核对",
+        "已核对 2026-10-28"
+      ],
+      [
+        "README 确认 alpha 状态、docx 能力与 CLI / MCP 用法",
+        "已核对 2026-10-28"
+      ],
+      [
+        "未实测安装与文档往返（安装包 80–110 MB，未完整下载）",
+        "说明 2026-10-28"
+      ],
+      [
+        "非目标宿主调用被拦截（HOST_NOT_ALLOWED）",
+        "已验证 2026-10-28"
+      ]
+    ],
+    "deploy": {
+      "type": "binary",
+      "steps": [
+        "if [ \"$(uname -s)\" = \"Darwin\" ]; then url=https://github.com/storytold/wordcraft/releases/download/v0.11.0/wordcraft-0.11.0-macos-universal.dmg ; want=0e2030b27157a42be151a28bae03a11589c08404d166d55d6d0bdded65b0d22b ; file=WordCraft.dmg ; elif [ \"$(uname -s)\" = \"Linux\" ]; then if command -v dpkg >/dev/null 2>&1; then url=https://github.com/storytold/wordcraft/releases/download/v0.11.0/wordcraft-0.11.0-linux-x86_64.deb ; want=5246a58853c157fd81670cbd6b35c3c27b53c3a9a631eaeee4b8925bd01e3efd ; file=wordcraft.deb ; else url=https://github.com/storytold/wordcraft/releases/download/v0.11.0/wordcraft-0.11.0-linux-x86_64.AppImage ; want=d92d5d37752b95f08904cc8328f3a73c2979361337ff260d23518f4024cd5c64 ; file=WordCraft.AppImage ; fi ; else echo \"当前脚本支持 Windows / macOS / Linux；BSD 请从 Release 下载 tar.gz\"; exit 1 ; fi",
+        "curl -fL -o \"$file\" \"$url\"",
+        "echo \"$want  $file\" | sha256sum -c -",
+        "if [ \"$file\" = \"WordCraft.dmg\" ]; then open \"$file\"; elif [ \"$file\" = \"wordcraft.deb\" ]; then sudo dpkg -i \"$file\" || sudo apt-get install -f -y; else chmod +x \"$file\"; echo \"运行 ./$file 即可启动\"; fi"
+      ],
+      "stepsPs": [
+        "curl.exe -L --fail -o WordCraft.msi \"https://github.com/storytold/wordcraft/releases/download/v0.11.0/wordcraft-0.11.0-windows-x64.msi\"",
+        "if ((Get-FileHash WordCraft.msi -Algorithm SHA256).Hash.ToLower() -ne 'fac76d185c3cd5990ceec2fd147748dcf4f2e289aa0085fecbcc7408cef65f87') { throw 'SHA256 校验失败，请重新下载' }",
+        "Start-Process msiexec.exe -ArgumentList '/i', '.\\WordCraft.msi'"
+      ],
+      "source": "https://github.com/storytold/wordcraft/releases/tag/v0.11.0"
+    },
+    "pitfalls": [
+      "打开 docx 排版错位：先备份原件，复杂图表与 SmartArt 可能无法完整往返",
+      "导出 PDF 缺字：检查字体是否嵌入，换系统字体后再试",
+      "macOS 首次打不开：到系统设置 → 隐私与安全性里允许一次",
+      "Linux 缺依赖：deb 安装失败时执行 sudo apt-get install -f -y",
+      "想批量处理：用 wordcraft-cli convert / inspect，不要手点",
+      "Agent 改坏了文档：用 inspect 先看结构，重要文件先复制一份",
+      "日志在哪：桌面版日志在用户配置目录的 logs/wordcraft.log"
+    ]
+  },
+  "gate": {
+    "allow": [
+      "dumate"
+    ],
+    "label": "百度搭子",
+    "url": "https://www.dumate.cn/",
+    "guideUrl": "https://github.com/JUTZUGC/wordcraft-deploy-guide",
+    "howToFix": [
+      "1. 打开 https://www.dumate.cn/ ，下载并安装「百度搭子」电脑端（Windows / macOS）",
+      "2. 用账号登录",
+      "3. 在对话窗口发送：你好，帮我从 github 部署 JUTZUGC/wordcraft-deploy-guide 到我的电脑上",
+      "4. 部署完成后，在同一对话窗口里继续使用"
+    ],
+    "hint": "请改用「百度搭子」部署后再使用；本工具没有网页版入口。",
+    "onError": "allow"
+  },
+  "keywords": [
+    "WordCraft 安装",
+    "WordCraft 教程",
+    "开源 Word 替代",
+    "docx 编辑器 开源",
+    "Rust 文字处理",
+    "WordCraft CLI",
+    "WordCraft MCP",
+    "LibreOffice 替代",
+    "WordCraft 中文",
+    "wordcraft deploy guide"
+  ],
+  "topics": [
+    "word-processor",
+    "docx",
+    "rust",
+    "desktop-app",
+    "mcp"
+  ]
+}
